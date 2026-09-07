@@ -1,0 +1,80 @@
+{
+  "base_link": {
+    "mass_kg": 4,
+    "centre_of_mass_in_link_m": [
+      0.09,
+      0,
+      0.0275
+    ],
+    "diagonal_inertia_kg_m2": [
+      0.020600286195947465,
+      0.028925387508592807,
+      0.04068673501587615
+    ]
+  },
+  "left_wheel_link": {
+    "mass_kg": 0.35,
+    "centre_of_mass_in_link_m": [
+      0,
+      0,
+      0
+    ],
+    "diagonal_inertia_kg_m2": [
+      0.0005184374999999999,
+      0.000984375,
+      0.0005184374999999999
+    ]
+  },
+  "right_wheel_link": {
+    "mass_kg": 0.35,
+    "centre_of_mass_in_link_m": [
+      0,
+      0,
+      0
+    ],
+    "diagonal_inertia_kg_m2": [
+      0.0005184374999999999,
+      0.000984375,
+      0.0005184374999999999
+    ]
+  },
+  "caster_fork_link": {
+    "mass_kg": 0.12,
+    "centre_of_mass_in_link_m": [
+      -0.005,
+      0,
+      -0.017
+    ],
+    "diagonal_inertia_kg_m2": [
+      3.6169999999999994e-05,
+      3.6169999999999994e-05,
+      3.8719999999999995e-05
+    ]
+  },
+  "caster_wheel_link": {
+    "mass_kg": 0.08,
+    "centre_of_mass_in_link_m": [
+      0,
+      0,
+      0
+    ],
+    "diagonal_inertia_kg_m2": [
+      1.4660000000000004e-05,
+      2.5e-05,
+      1.4660000000000004e-05
+    ]
+  },
+  "lidar_link": {
+    "mass_kg": 0.2,
+    "centre_of_mass_in_link_m": [
+      0,
+      0,
+      -0.0075
+    ],
+    "diagonal_inertia_kg_m2": [
+      0.00014000000000000001,
+      0.00014000000000000001,
+      0.00016
+    ]
+  }
+}

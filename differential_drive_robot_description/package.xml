@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package format="3">
+  <name>differential_drive_robot_description</name>
+  <version>1.0.0</version>
+  <description>Fusion CAD mesh description for a differential drive robot with a passive caster and LiDAR.</description>
+  <maintainer email="maintainer@example.com">Robot model maintainer</maintainer>
+  <license>Proprietary</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_model_path="${prefix}/.." />
+  </export>
+</package>

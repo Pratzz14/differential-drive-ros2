@@ -1,0 +1,320 @@
+{
+  "status": "PASS - local CAD and description checks",
+  "urdf_parser": "urdf-parser-py 0.0.4",
+  "links": 6,
+  "joints": 5,
+  "continuous_joints": 4,
+  "visual_meshes": 16,
+  "triangles": 9912,
+  "total_mass_kg": 5.1,
+  "assembled_centre_of_mass_m": [
+    0.0816078431372549,
+    0.0,
+    0.09997254901960785
+  ],
+  "static_support_margin_m": 0.06378072569008603,
+  "wheel_ground_contact_error_m": 0,
+  "wheel_to_chassis_clearance_m": 0.01,
+  "chassis_ground_clearance_m": 0.065,
+  "lidar_scan_height_m": 0.2055,
+  "fusion_timeline_issues": [],
+  "fusion_archive_compression_methods": [
+    0,
+    93
+  ],
+  "checks": [
+    "URDF parsed by urdf-parser-py",
+    "Single rooted connected tree; no duplicate parents",
+    "CAD and URDF link transforms agree",
+    "All binary STLs have closed edge incidence",
+    "Mesh bounds and volumes agree with CAD; metre units verified",
+    "All inertias positive definite and satisfy triangle inequalities",
+    "Estimated centre of mass lies inside support triangle",
+    "Three wheel contacts lie on z=0",
+    "Drive plugin wheel geometry and joint axes match CAD",
+    "LiDAR scan pose coincides with lidar_link origin",
+    "Fusion API export succeeded; archive central directory readable",
+    "Corrected README command tested through Bash with mock ros2; libyaml preserves all 12758 URDF characters as one string"
+  ],
+  "not_run": [
+    "Full Fusion archive decompression (Zstandard is unsupported by Python 3.12 zipfile)",
+    "Gazebo URDF-to-SDF conversion",
+    "Gazebo physics stability and caster rolling",
+    "ROS topic bridging, teleoperation and odometry",
+    "GPU LiDAR and RViz display"
+  ],
+  "meshes": [
+    {
+      "file": "base_link_chassis_enclosure.stl",
+      "triangles": 24,
+      "bounds_m": [
+        [
+          -0.05999999865889549,
+          -0.11999999731779099,
+          -0.009999999776482582
+        ],
+        [
+          0.23999999463558197,
+          0.11999999731779099,
+          0.09000000357627869
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "left_wheel_link_rubber_wheel.stl",
+      "triangles": 740,
+      "bounds_m": [
+        [
+          -0.07500000298023224,
+          -0.014999999664723873,
+          -0.07498930394649506
+        ],
+        [
+          0.07500000298023224,
+          0.014999999664723873,
+          0.07498930394649506
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "left_wheel_link_outer_hub.stl",
+      "triangles": 744,
+      "bounds_m": [
+        [
+          -0.042500000447034836,
+          0.014999999664723873,
+          -0.042498499155044556
+        ],
+        [
+          0.04249400272965431,
+          0.01600000075995922,
+          0.042498499155044556
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "left_wheel_link_axle_cap.stl",
+      "triangles": 744,
+      "bounds_m": [
+        [
+          -0.010999999940395355,
+          0.01549999974668026,
+          -0.01099961157888174
+        ],
+        [
+          0.010998447425663471,
+          0.017500000074505806,
+          0.01099961157888174
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "right_wheel_link_rubber_wheel.stl",
+      "triangles": 740,
+      "bounds_m": [
+        [
+          -0.07500000298023224,
+          -0.014999999664723873,
+          -0.07498930394649506
+        ],
+        [
+          0.07500000298023224,
+          0.014999999664723873,
+          0.07498930394649506
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "right_wheel_link_outer_hub.stl",
+      "triangles": 744,
+      "bounds_m": [
+        [
+          -0.042500000447034836,
+          -0.01600000075995922,
+          -0.042498499155044556
+        ],
+        [
+          0.04249400272965431,
+          -0.014999999664723873,
+          0.042498499155044556
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "right_wheel_link_axle_cap.stl",
+      "triangles": 744,
+      "bounds_m": [
+        [
+          -0.010999999940395355,
+          -0.017500000074505806,
+          -0.01099961157888174
+        ],
+        [
+          0.010998447425663471,
+          -0.01549999974668026,
+          0.01099961157888174
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "caster_fork_link_swivel_plate.stl",
+      "triangles": 744,
+      "bounds_m": [
+        [
+          -0.02199999988079071,
+          -0.02199922315776348,
+          -0.003000000026077032
+        ],
+        [
+          0.021996894851326942,
+          0.02199922315776348,
+          -3.3306689994292145e-18
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "caster_fork_link_fork_left.stl",
+      "triangles": 12,
+      "bounds_m": [
+        [
+          -0.019999999552965164,
+          0.009999999776482582,
+          -0.04100000113248825
+        ],
+        [
+          0.004999999888241291,
+          0.014000000432133675,
+          -0.003000000026077032
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "caster_fork_link_fork_right.stl",
+      "triangles": 12,
+      "bounds_m": [
+        [
+          -0.019999999552965164,
+          -0.014000000432133675,
+          -0.04100000113248825
+        ],
+        [
+          0.004999999888241291,
+          -0.009999999776482582,
+          -0.003000000026077032
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "caster_wheel_link_caster_tyre.stl",
+      "triangles": 732,
+      "bounds_m": [
+        [
+          -0.02500000037252903,
+          -0.008999999612569809,
+          -0.02500000037252903
+        ],
+        [
+          0.02500000037252903,
+          0.008999999612569809,
+          0.02500000037252903
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "caster_wheel_link_caster_axle.stl",
+      "triangles": 1704,
+      "bounds_m": [
+        [
+          -0.004999999888241291,
+          -0.014999999664723873,
+          -0.0049983421340584755
+        ],
+        [
+          0.004999999888241291,
+          0.014999999664723873,
+          0.0049983421340584755
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "lidar_link_lidar_mount.stl",
+      "triangles": 12,
+      "bounds_m": [
+        [
+          -0.04500000178813934,
+          -0.04500000178813934,
+          -0.04050000011920929
+        ],
+        [
+          0.04500000178813934,
+          0.04500000178813934,
+          -0.03750000149011612
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "lidar_link_lidar_lower_housing.stl",
+      "triangles": 736,
+      "bounds_m": [
+        [
+          -0.03999999910593033,
+          -0.039998557418584824,
+          -0.03750000149011612
+        ],
+        [
+          0.03999423235654831,
+          0.039998557418584824,
+          -0.012500000186264515
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "lidar_link_lidar_optical_window.stl",
+      "triangles": 736,
+      "bounds_m": [
+        [
+          -0.03999999910593033,
+          -0.039998557418584824,
+          -0.012500000186264515
+        ],
+        [
+          0.03999423235654831,
+          0.039998557418584824,
+          0.012500000186264515
+        ]
+      ],
+      "watertight": true
+    },
+    {
+      "file": "lidar_link_lidar_cap.stl",
+      "triangles": 744,
+      "bounds_m": [
+        [
+          -0.03999999910593033,
+          -0.03999858722090721,
+          0.012500000186264515
+        ],
+        [
+          0.03999435529112816,
+          0.03999858722090721,
+          0.02250000089406967
+        ]
+      ],
+      "watertight": true
+    }
+  ]
+}

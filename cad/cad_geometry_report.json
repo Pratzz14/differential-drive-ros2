@@ -1,0 +1,412 @@
+{
+  "document": "Differential Drive Robot v1",
+  "fusion_units": "centimetres internally; STL explicitly exported in metres",
+  "components": [
+    {
+      "name": "base_link",
+      "translation_cm": [
+        0.0,
+        0.0,
+        7.5
+      ],
+      "bodies": [
+        {
+          "name": "Chassis enclosure",
+          "mesh": "base_link_chassis_enclosure.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -6.0,
+            -12.0,
+            -1.0
+          ],
+          "max_cm": [
+            24.0,
+            12.0,
+            9.0
+          ],
+          "volume_cm3": 733.1760000000013
+        }
+      ]
+    },
+    {
+      "name": "left_wheel_link",
+      "translation_cm": [
+        0.0,
+        14.5,
+        7.5
+      ],
+      "bodies": [
+        {
+          "name": "Rubber wheel",
+          "mesh": "left_wheel_link_rubber_wheel.stl",
+          "appearance": "Robot rubber",
+          "min_cm": [
+            -7.5,
+            -1.5,
+            -7.5
+          ],
+          "max_cm": [
+            7.5,
+            1.5,
+            7.5
+          ],
+          "volume_cm3": 530.1437602933003
+        },
+        {
+          "name": "Outer hub",
+          "mesh": "left_wheel_link_outer_hub.stl",
+          "appearance": "Robot black",
+          "min_cm": [
+            -4.25,
+            1.5,
+            -4.25
+          ],
+          "max_cm": [
+            4.25,
+            1.6,
+            4.25
+          ],
+          "volume_cm3": 5.674501730546812
+        },
+        {
+          "name": "Axle cap",
+          "mesh": "left_wheel_link_axle_cap.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -1.1,
+            1.5499999999999998,
+            -1.1
+          ],
+          "max_cm": [
+            1.1,
+            1.75,
+            1.1
+          ],
+          "volume_cm3": 0.7602654221687634
+        }
+      ]
+    },
+    {
+      "name": "right_wheel_link",
+      "translation_cm": [
+        0.0,
+        -14.5,
+        7.5
+      ],
+      "bodies": [
+        {
+          "name": "Rubber wheel",
+          "mesh": "right_wheel_link_rubber_wheel.stl",
+          "appearance": "Robot rubber",
+          "min_cm": [
+            -7.5,
+            -1.5,
+            -7.5
+          ],
+          "max_cm": [
+            7.5,
+            1.5,
+            7.5
+          ],
+          "volume_cm3": 530.1437602933003
+        },
+        {
+          "name": "Outer hub",
+          "mesh": "right_wheel_link_outer_hub.stl",
+          "appearance": "Robot black",
+          "min_cm": [
+            -4.25,
+            -1.6,
+            -4.25
+          ],
+          "max_cm": [
+            4.25,
+            -1.5,
+            4.25
+          ],
+          "volume_cm3": 5.674501730546812
+        },
+        {
+          "name": "Axle cap",
+          "mesh": "right_wheel_link_axle_cap.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -1.1,
+            -1.75,
+            -1.1
+          ],
+          "max_cm": [
+            1.1,
+            -1.5499999999999998,
+            1.1
+          ],
+          "volume_cm3": 0.7602654221687634
+        }
+      ]
+    },
+    {
+      "name": "caster_fork_link",
+      "translation_cm": [
+        20.0,
+        0.0,
+        6.5
+      ],
+      "bodies": [
+        {
+          "name": "Swivel plate",
+          "mesh": "caster_fork_link_swivel_plate.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -2.2,
+            -2.2,
+            -0.3000000000000004
+          ],
+          "max_cm": [
+            2.2,
+            2.2,
+            -3.3306690738754696e-16
+          ],
+          "volume_cm3": 4.561592533012576
+        },
+        {
+          "name": "Fork left",
+          "mesh": "caster_fork_link_fork_left.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -2.0,
+            1.0,
+            -4.1000000000000005
+          ],
+          "max_cm": [
+            0.5,
+            1.4,
+            -0.2999999999999998
+          ],
+          "volume_cm3": 3.8
+        },
+        {
+          "name": "Fork right",
+          "mesh": "caster_fork_link_fork_right.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -2.0,
+            -1.4,
+            -4.1000000000000005
+          ],
+          "max_cm": [
+            0.5,
+            -1.0,
+            -0.2999999999999998
+          ],
+          "volume_cm3": 3.8
+        }
+      ]
+    },
+    {
+      "name": "caster_wheel_link",
+      "translation_cm": [
+        18.5,
+        0.0,
+        2.5
+      ],
+      "bodies": [
+        {
+          "name": "Caster tyre",
+          "mesh": "caster_wheel_link_caster_tyre.stl",
+          "appearance": "Robot rubber",
+          "min_cm": [
+            -2.5,
+            -0.9,
+            -2.5
+          ],
+          "max_cm": [
+            2.5,
+            0.9,
+            2.5
+          ],
+          "volume_cm3": 35.342917352886694
+        },
+        {
+          "name": "Caster axle",
+          "mesh": "caster_wheel_link_caster_axle.stl",
+          "appearance": "Robot silver",
+          "min_cm": [
+            -0.5,
+            -1.5,
+            -0.5
+          ],
+          "max_cm": [
+            0.5,
+            1.5,
+            0.5
+          ],
+          "volume_cm3": 2.356194490192446
+        }
+      ]
+    },
+    {
+      "name": "lidar_link",
+      "translation_cm": [
+        9.0,
+        0.0,
+        20.55
+      ],
+      "bodies": [
+        {
+          "name": "LiDAR mount",
+          "mesh": "lidar_link_lidar_mount.stl",
+          "appearance": "Robot black",
+          "min_cm": [
+            -4.5,
+            -4.5,
+            -4.05
+          ],
+          "max_cm": [
+            4.5,
+            4.5,
+            -3.75
+          ],
+          "volume_cm3": 24.299999999999986
+        },
+        {
+          "name": "LiDAR lower housing",
+          "mesh": "lidar_link_lidar_lower_housing.stl",
+          "appearance": "Robot black",
+          "min_cm": [
+            -4.0,
+            -4.0,
+            -3.75
+          ],
+          "max_cm": [
+            4.0,
+            4.0,
+            -1.25
+          ],
+          "volume_cm3": 125.66370614359711
+        },
+        {
+          "name": "LiDAR optical window",
+          "mesh": "lidar_link_lidar_optical_window.stl",
+          "appearance": "Robot window",
+          "min_cm": [
+            -4.0,
+            -4.0,
+            -1.25
+          ],
+          "max_cm": [
+            4.0,
+            4.0,
+            1.25
+          ],
+          "volume_cm3": 125.66370614359711
+        },
+        {
+          "name": "LiDAR cap",
+          "mesh": "lidar_link_lidar_cap.stl",
+          "appearance": "Robot black",
+          "min_cm": [
+            -4.0,
+            -4.0,
+            1.25
+          ],
+          "max_cm": [
+            4.0,
+            4.0,
+            2.25
+          ],
+          "volume_cm3": 50.26548245743886
+        }
+      ]
+    }
+  ],
+  "joints": [
+    {
+      "name": "left_wheel_joint",
+      "type": 1,
+      "parent": "base_link",
+      "child": "left_wheel_link",
+      "axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "origin_cm": [
+        0.0,
+        14.5,
+        7.5
+      ]
+    },
+    {
+      "name": "right_wheel_joint",
+      "type": 1,
+      "parent": "base_link",
+      "child": "right_wheel_link",
+      "axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "origin_cm": [
+        0.0,
+        -14.5,
+        7.5
+      ]
+    },
+    {
+      "name": "caster_swivel_joint",
+      "type": 1,
+      "parent": "base_link",
+      "child": "caster_fork_link",
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "origin_cm": [
+        20.0,
+        0.0,
+        6.5
+      ]
+    },
+    {
+      "name": "caster_wheel_joint",
+      "type": 1,
+      "parent": "caster_fork_link",
+      "child": "caster_wheel_link",
+      "axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "origin_cm": [
+        18.5,
+        0.0,
+        2.5
+      ]
+    },
+    {
+      "name": "lidar_joint",
+      "type": 0,
+      "parent": "base_link",
+      "child": "lidar_link"
+    }
+  ],
+  "timeline_issues": [],
+  "parameters": {
+    "chassis_length": "300 mm",
+    "chassis_width": "240 mm",
+    "chassis_height": "100 mm",
+    "panel_thickness": "3 mm",
+    "wheel_diameter": "150 mm",
+    "wheel_width": "30 mm",
+    "wheel_separation": "290 mm",
+    "ground_clearance": "65 mm",
+    "axle_offset": "90 mm",
+    "caster_diameter": "50 mm",
+    "caster_width": "18 mm",
+    "caster_pivot_x": "200 mm",
+    "caster_trail": "15 mm",
+    "lidar_diameter": "80 mm",
+    "lidar_height": "60 mm"
+  }
+}
