@@ -1,9 +1,9 @@
 # Differential-drive ROS 2 simulation
 
-A six-link differential-drive robot for Ubuntu 24.04, ROS 2 Jazzy, and
+A seven-link differential-drive robot for Ubuntu 24.04, ROS 2 Jazzy, and
 Gazebo Harmonic. The repository includes the Fusion CAD source, STL meshes,
 plain URDF description, Gazebo world, ROS–Gazebo bridges, RViz configuration,
-and keyboard teleoperation workflow.
+keyboard teleoperation, and a seeded autonomous-navigation benchmark.
 
 ![Differential-drive robot](docs/images/robot_preview.png)
 
@@ -13,6 +13,9 @@ and keyboard teleoperation workflow.
 Keyboard teleop → /cmd_vel → ros_gz_bridge → Gazebo physics
 Gazebo → odometry, joints, LiDAR, clock → ros_gz_bridge → ROS 2
 URDF + joint states → robot_state_publisher → TF tree → RViz
+
+Wheel odometry + IMU → robot_localization → filtered odometry
+Saved map + filtered odometry + LiDAR → AMCL + Nav2 → /cmd_vel
 ```
 
 Gazebo is responsible for physics and sensor simulation. ROS 2 carries
@@ -39,6 +42,12 @@ for the complete topic and frame layout.
 │   ├── worlds/test_world.sdf
 │   ├── CMakeLists.txt
 │   └── package.xml
+├── differential_drive_robot_navigation/
+│   ├── config/
+│   ├── launch/navigation.launch.py
+│   ├── maps/
+│   ├── differential_drive_robot_navigation/
+│   └── package.xml
 └── docs/
     ├── architecture.md
     ├── verification.md
@@ -61,6 +70,10 @@ sudo apt install \
   ros-jazzy-robot-state-publisher \
   ros-jazzy-teleop-twist-keyboard \
   ros-jazzy-rviz2 \
+  ros-jazzy-navigation2 \
+  ros-jazzy-nav2-bringup \
+  ros-jazzy-robot-localization \
+  ros-jazzy-slam-toolbox \
   python3-colcon-common-extensions \
   python3-rosdep \
   liburdfdom-tools
@@ -68,18 +81,14 @@ sudo apt install \
 
 ## Workspace setup
 
-Clone this repository beneath the workspace's `src` directory:
+Build the repository in its current workspace directory:
 
 ```bash
-mkdir -p ~/ros2_ws/src
-cd ~/ros2_ws/src
-git clone <repository-url> differential-drive-robot
-
-cd ~/ros2_ws
+cd ~/Desktop/ROS_Projects/differential-drive-ros2
 source /opt/ros/jazzy/setup.bash
 
 rosdep install \
-  --from-paths src/differential-drive-robot \
+  --from-paths . \
   --ignore-src \
   --rosdistro jazzy \
   -r -y
@@ -87,13 +96,13 @@ rosdep install \
 colcon build --symlink-install \
   --packages-select \
   differential_drive_robot_description \
-  differential_drive_robot_simulation
+  differential_drive_robot_simulation \
+  differential_drive_robot_navigation
 
 source install/setup.bash
 ```
 
-Only the two robot packages are selected, so unrelated packages in the same
-workspace are not built.
+Only the three robot packages are selected.
 
 ## Run the simulation
 
@@ -102,15 +111,24 @@ and RViz:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/ros2_ws/install/setup.bash
+source ~/Desktop/ROS_Projects/differential-drive-ros2/install/setup.bash
 ros2 launch differential_drive_robot_simulation sim.launch.py
 ```
+
+The robot always spawns at the fixed pose `x=-5.0`, `y=0.0`, `yaw=0.0` in
+both the basic simulation and autonomous-navigation launch files.
+Closing Gazebo also shuts down the associated ROS nodes, preventing stale
+Nav2 and TF processes from surviving into the next simulation run.
+Each launch uses its own Gazebo transport partition and bridges the selected
+world's clock. A second basic or navigation launch in the same `ROS_DOMAIN_ID`
+is rejected before any simulation nodes start. The launch also checks for
+leftover clock/sensor publishers and localization/navigation nodes.
 
 In a second terminal, start keyboard control:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/ros2_ws/install/setup.bash
+source ~/Desktop/ROS_Projects/differential-drive-ros2/install/setup.bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
@@ -126,11 +144,70 @@ Press `k` or Space to send a zero-velocity command before terminating teleop.
 The speed controls printed by the teleop program can be used, but Gazebo caps
 the robot at 0.5 m/s linear and 1.5 rad/s angular velocity.
 
+## Run autonomous navigation
+
+Launch Nav2 with a reproducible obstacle layout:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/Desktop/ROS_Projects/differential-drive-ros2/install/setup.bash
+ros2 launch differential_drive_robot_navigation navigation.launch.py \
+  seed:=42 obstacle_count:=6
+```
+
+Manual goal selection is the default. Wait for the terminal message
+`Localization initialized at the fixed start pose; waiting for a manual RViz 2D Goal Pose`.
+Then, in RViz,
+select **2D Goal Pose**, click the destination on the map, and drag to choose
+the robot's final heading. The launch always initializes AMCL at the fixed
+Gazebo spawn pose, waits for a scan-confirmed pose, and activates Nav2 before
+reporting readiness. You can send another goal the same
+way after the robot arrives.
+
+To run the original automatic start-to-goal mission, add `auto_goal:=true`:
+
+```bash
+ros2 launch differential_drive_robot_navigation navigation.launch.py \
+  seed:=42 obstacle_count:=6 auto_goal:=true
+```
+
+The automatic destination defaults to `(5.0, 0.0, 0.0)`. Override its map
+coordinates and heading from the command line when needed:
+
+```bash
+ros2 launch differential_drive_robot_navigation navigation.launch.py \
+  seed:=42 auto_goal:=true goal_x:=3.0 goal_y:=-1.5 goal_yaw:=1.57
+```
+
+Use `seed:=-1` (the default) for a newly generated seed. The launch validates
+that the inflated robot footprint can reach the goal before starting Gazebo.
+Generated worlds and layout metadata are written below
+`/tmp/differential_drive_navigation/worlds`; trial results are written below
+`/tmp/differential_drive_navigation/results`.
+
+Useful launch arguments are `rviz`, `headless`, `auto_goal`, `goal_x`,
+`goal_y`, `goal_yaw`, `mission_timeout`, `record_results`,
+`generated_world_directory`, and `results_directory`. Mission timeout and
+result recording apply only when `auto_goal:=true`.
+
+Stop the launch with **Ctrl+C** and wait for it to finish before restarting.
+Do not run `sim.launch.py` alongside `navigation.launch.py`: navigation already
+starts Gazebo and the robot. If startup reports existing nodes, stop their
+original launch terminal; `ros2 daemon stop` only stops the discovery daemon,
+not Gazebo or navigation nodes. A failed essential process shuts down the
+stack instead of leaving the remaining nodes running.
+
+For a healthy active run, `ros2 topic info /clock` reports one publisher.
+Repeated `TF_OLD_DATA` or backward clock jumps are not normal. A Gazebo world
+reset is not a navigation restart: stop and relaunch the full stack to restore
+the fixed spawn pose and reinitialize localization together.
+
 ## Verification
 
-The description should convert to six links, five joints, sixteen mesh URIs,
-two model plugins, and one GPU LiDAR sensor. Runtime expectations are about
-50 Hz for `/odom` and `/joint_states`, and 10 Hz for `/scan`.
+The description should convert to seven links, six joints, sixteen mesh URIs,
+two model plugins, a GPU LiDAR, and an IMU. Runtime expectations are about
+50 Hz for `/odom` and `/joint_states`, 10 Hz for `/scan`, and 100 Hz for
+`/imu/data`.
 
 Use the commands and acceptance checklist in
 [docs/verification.md](docs/verification.md).
@@ -139,7 +216,8 @@ Use the commands and acceptance checklist in
 
 `/odom` is wheel odometry. If the robot pushes against an obstacle while the
 wheels continue turning, RViz can show motion even though the physical model
-is blocked in Gazebo. This is expected wheel-slip drift. The red obstacle
+is blocked in Gazebo. Autonomous mode fuses this signal with the IMU but cannot
+eliminate translational wheel-slip drift. The red obstacle
 shape in RViz is the LiDAR scan, not the Gazebo world model.
 
 ## CAD and reports
@@ -154,5 +232,5 @@ exports.
 
 The repository currently remains proprietary; see [LICENSE](LICENSE). Choose
 and apply an open-source hardware/software license before inviting reuse or
-redistribution. Update the `<license>` and maintainer entries in both
+redistribution. Update the `<license>` and maintainer entries in all three
 `package.xml` files if the licensing or ownership information changes.

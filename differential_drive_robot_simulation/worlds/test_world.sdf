@@ -12,6 +12,7 @@
     <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
     <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
     <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
     <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
@@ -64,7 +65,7 @@
 
     <!-- A static obstacle in the LiDAR scan plane, one metre ahead of spawn. -->
     <model name="lidar_test_obstacle">
-      <pose>1.2 0 0.2 0 0 0</pose>
+      <pose>-3.8 0 0.2 0 0 0</pose>
       <static>true</static>
       <link name="link">
         <collision name="collision">

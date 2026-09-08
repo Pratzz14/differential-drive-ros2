@@ -4,9 +4,15 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
+from launch.actions import ExecuteProcess, IncludeLaunchDescription, SetEnvironmentVariable, Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
+
+
+ROBOT_START_X = -5.0
+ROBOT_START_Y = 0.0
+ROBOT_START_Z = 0.08
+ROBOT_START_YAW = 0.0
 
 
 def generate_launch_description():
@@ -34,18 +40,16 @@ def generate_launch_description():
         [os.path.dirname(description_share), description_share]
     )
 
-    gazebo_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('ros_gz_sim'),
-                'launch',
-                'gz_sim.launch.py',
-            )
-        ),
-        launch_arguments={'gz_args': f'-r {world_file}'}.items(),
+    gazebo_launch = ExecuteProcess(
+        cmd=['gz', 'sim', '-r', world_file],
+        output='screen',
+        on_exit=Shutdown(reason='Gazebo exited'),
     )
 
     return LaunchDescription([
+        IncludeLaunchDescription(PythonLaunchDescriptionSource(
+            os.path.join(simulation_share, 'launch', 'session.launch.py')
+        )),
         SetEnvironmentVariable(
             name='GZ_SIM_RESOURCE_PATH', value=resource_roots
         ),
@@ -64,7 +68,7 @@ def generate_launch_description():
         ),
         Node(
             package='ros_gz_bridge',
-            executable='bridge_node',
+            executable='parameter_bridge',
             name='ros_gz_bridge',
             output='screen',
             parameters=[
@@ -78,12 +82,19 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': True}],
             arguments=[
+                '-world', 'test_world',
                 '-file',
                 urdf_file,
                 '-name',
                 'differential_drive_robot',
+                '-x',
+                str(ROBOT_START_X),
+                '-y',
+                str(ROBOT_START_Y),
                 '-z',
-                '0.08',
+                str(ROBOT_START_Z),
+                '-Y',
+                str(ROBOT_START_YAW),
             ],
         ),
         Node(

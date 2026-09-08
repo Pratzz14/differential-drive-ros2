@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="navigation_arena">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <scene>
+      <ambient>0.45 0.45 0.48 1</ambient>
+      <background>0.10 0.12 0.16 1</background>
+      <shadows>true</shadows>
+    </scene>
+    <light name="sun" type="directional">
+      <pose>0 0 8 0.35 -0.45 0</pose>
+      <diffuse>0.9 0.9 0.85 1</diffuse>
+      <specular>0.25 0.25 0.25 1</specular>
+      <direction>-0.4 0.3 -0.85</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision"><geometry><plane><normal>0 0 1</normal><size>12 8</size></plane></geometry></collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>12 8</size></plane></geometry>
+          <material><ambient>0.72 0.74 0.78 1</ambient><diffuse>0.72 0.74 0.78 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="north_wall"><static>true</static><pose>0 3.95 0.25 0 0 0</pose><link name="link"><collision name="collision"><geometry><box><size>12 0.1 0.5</size></box></geometry></collision><visual name="visual"><geometry><box><size>12 0.1 0.5</size></box></geometry></visual></link></model>
+    <model name="south_wall"><static>true</static><pose>0 -3.95 0.25 0 0 0</pose><link name="link"><collision name="collision"><geometry><box><size>12 0.1 0.5</size></box></geometry></collision><visual name="visual"><geometry><box><size>12 0.1 0.5</size></box></geometry></visual></link></model>
+    <model name="east_wall"><static>true</static><pose>5.95 0 0.25 0 0 0</pose><link name="link"><collision name="collision"><geometry><box><size>0.1 8 0.5</size></box></geometry></collision><visual name="visual"><geometry><box><size>0.1 8 0.5</size></box></geometry></visual></link></model>
+    <model name="west_wall"><static>true</static><pose>-5.95 0 0.25 0 0 0</pose><link name="link"><collision name="collision"><geometry><box><size>0.1 8 0.5</size></box></geometry></collision><visual name="visual"><geometry><box><size>0.1 8 0.5</size></box></geometry></visual></link></model>
+
+    <!-- This divider forces the planner to choose a north or south route. -->
+    <model name="central_divider">
+      <static>true</static><pose>0 0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.15 4 0.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.15 4 0.5</size></box></geometry><material><ambient>0.22 0.28 0.38 1</ambient><diffuse>0.22 0.28 0.38 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- RANDOM_OBSTACLES -->
+  </world>
+</sdf>
