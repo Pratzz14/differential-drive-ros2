@@ -375,4 +375,11 @@
       </imu>
     </sensor>
   </gazebo>
+  <gazebo reference="base_link">
+    <sensor name="base_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact><collision>chassis_collision</collision><topic>/robot_contacts</topic></contact>
+    </sensor>
+  </gazebo>
 </robot>

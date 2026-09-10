@@ -1,0 +1,31 @@
+collision_monitor:
+  ros__parameters:
+    use_sim_time: true
+    base_frame_id: base_link
+    odom_frame_id: odom
+    cmd_vel_in_topic: cmd_vel_smoothed
+    cmd_vel_out_topic: cmd_vel
+    state_topic: collision_monitor_state
+    transform_tolerance: 0.5
+    source_timeout: 0.5
+    polygons: [StopZone, SlowZone]
+    StopZone:
+      type: polygon
+      points: "[[0.34, 0.22], [0.34, -0.22], [-0.12, -0.22], [-0.12, 0.22]]"
+      action_type: stop
+      min_points: 3
+      visualize: true
+      polygon_pub_topic: collision_stop_zone
+    SlowZone:
+      type: polygon
+      points: "[[0.75, 0.38], [0.75, -0.38], [-0.25, -0.38], [-0.25, 0.38]]"
+      action_type: slowdown
+      slowdown_ratio: 0.50
+      min_points: 3
+      visualize: true
+      polygon_pub_topic: collision_slow_zone
+    observation_sources: [scan]
+    scan:
+      type: scan
+      topic: /scan
+      enabled: true

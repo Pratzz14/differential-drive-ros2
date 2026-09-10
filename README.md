@@ -48,6 +48,12 @@ for the complete topic and frame layout.
 │   ├── maps/
 │   ├── differential_drive_robot_navigation/
 │   └── package.xml
+├── differential_drive_robot_dynamic_navigation/
+│   ├── config/
+│   ├── launch/dynamic_navigation.launch.py
+│   ├── maps/ and worlds/
+│   ├── differential_drive_robot_dynamic_navigation/
+│   └── package.xml
 └── docs/
     ├── architecture.md
     ├── verification.md
@@ -97,12 +103,13 @@ colcon build --symlink-install \
   --packages-select \
   differential_drive_robot_description \
   differential_drive_robot_simulation \
-  differential_drive_robot_navigation
+  differential_drive_robot_navigation \
+  differential_drive_robot_dynamic_navigation
 
 source install/setup.bash
 ```
 
-Only the three robot packages are selected.
+Only the four robot packages are selected.
 
 ## Run the simulation
 
@@ -202,12 +209,47 @@ Repeated `TF_OLD_DATA` or backward clock jumps are not normal. A Gazebo world
 reset is not a navigation restart: stop and relaunch the full stack to restore
 the fixed spawn pose and reinitialize localization together.
 
+## Run dynamic-obstacle navigation
+
+Launch the predictive mode with two static and four moving obstacles:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/Desktop/ROS_Projects/differential-drive-ros2/install/setup.bash
+ros2 launch differential_drive_robot_dynamic_navigation dynamic_navigation.launch.py \
+  seed:=42 static_obstacle_count:=2 dynamic_obstacle_count:=4
+```
+
+The robot cruises at up to 0.45 m/s and the obstacles patrol at 0.10–0.22 m/s.
+Use `robot_speed`, `obstacle_min_speed` and `obstacle_max_speed` launch arguments
+to adjust them. LiDAR-derived motion predictions feed the local costmap; global
+planning uses observed occupancy and retains valid routes to reduce unnecessary
+detours. Collision checks remain active with tighter soft-clearance settings.
+Predictive avoidance and an automatic `(5.0, 0.0)` goal are the
+defaults. Use `avoidance_mode:=reactive` for scan-only avoidance or
+`auto_goal:=false` to select a 2D Goal Pose in RViz.
+
+Stop with Ctrl+C once and wait for the launch terminal to return. The dynamic
+launch now stops patrols, shuts down Nav2 through its lifecycle managers, then
+stops Gazebo before terminating the remaining processes.
+
+Generated layouts and trial results are stored below
+`/tmp/differential_drive_dynamic/`. See
+[the dynamic-navigation package guide](differential_drive_robot_dynamic_navigation/README.md)
+for all launch arguments, RViz instructions and the read-only runtime health check:
+
+```bash
+ros2 run differential_drive_robot_dynamic_navigation check_navigation.py
+```
+
 ## Verification
 
 The description should convert to seven links, six joints, sixteen mesh URIs,
-two model plugins, a GPU LiDAR, and an IMU. Runtime expectations are about
-50 Hz for `/odom` and `/joint_states`, 10 Hz for `/scan`, and 100 Hz for
-`/imu/data`.
+two model plugins, a GPU LiDAR, an IMU, and a contact sensor. Runtime expectations are about
+50 Hz for `/odom`, 10 Hz for `/scan`, and 100 Hz for `/imu/data` (simulation
+time). `/joint_states` requests 50 Hz; older Gazebo JointStatePublisher versions
+ignore that limit and publish at the physics rate instead. Wall-clock rates are
+lower when simulation runs slower than real time.
 
 Use the commands and acceptance checklist in
 [docs/verification.md](docs/verification.md).
@@ -232,5 +274,5 @@ exports.
 
 The repository currently remains proprietary; see [LICENSE](LICENSE). Choose
 and apply an open-source hardware/software license before inviting reuse or
-redistribution. Update the `<license>` and maintainer entries in all three
+redistribution. Update the `<license>` and maintainer entries in all four
 `package.xml` files if the licensing or ownership information changes.

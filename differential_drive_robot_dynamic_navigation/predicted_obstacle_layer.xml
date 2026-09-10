@@ -1,0 +1,7 @@
+<library path="predicted_obstacle_layer">
+  <class name="differential_drive_robot_dynamic_navigation/PredictedObstacleLayer"
+         type="differential_drive_robot_dynamic_navigation::PredictedObstacleLayer"
+         base_class_type="nav2_costmap_2d::Layer">
+    <description>Short-lived swept occupancy received from the LiDAR tracker.</description>
+  </class>
+</library>

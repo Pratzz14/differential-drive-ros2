@@ -20,10 +20,13 @@ spec.loader.exec_module(session)
 @pytest.mark.parametrize('name,code,shutdown', [
     ('spawn_differential_drive_robot', 0, False),
     ('navigation_mission', 0, False),
+    ('dynamic_navigation_mission', 0, False),
     ('navigation_rviz', 0, False),
+    ('dynamic_navigation_rviz', 0, False),
     ('spawn_differential_drive_robot', 1, True),
     ('navigation_mission', 1, True),
     ('robot_state_publisher', 0, True),
+    ('dynamic_obstacle_controller', 0, True),
     ('navigation_ros_gz_bridge', -11, True),
 ])
 def test_process_exit(name, code, shutdown):

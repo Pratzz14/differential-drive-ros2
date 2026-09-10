@@ -50,6 +50,8 @@ def _setup(context):
                               if namespace == '/' and name in {
                                   'amcl', 'ekf_filter_node', 'robot_state_publisher',
                                   'controller_server', 'planner_server', 'bt_navigator',
+                                  'collision_monitor', 'dynamic_obstacle_controller',
+                                  'dynamic_obstacle_motion_tracker', 'motion_tracker',
                                   'lifecycle_manager_localization',
                                   'lifecycle_manager_navigation',
                               }})
@@ -79,7 +81,8 @@ def _stop_on_exit(event, context):
     name = event.action.node_name.rsplit('/', 1)[-1] if is_node else ''
     expected_exit = name in {
         'spawn_differential_drive_robot', 'navigation_mission',
-        'navigation_rviz', 'rviz2',
+        'dynamic_navigation_mission', 'navigation_rviz',
+        'dynamic_navigation_rviz', 'rviz2',
     }
     if event.returncode != 0 or (is_node and not expected_exit):
         return [Shutdown(reason=(
