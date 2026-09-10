@@ -3,7 +3,7 @@
 ## Pre-commit verification
 
 Rebuilt the dynamic-navigation package, existing navigation package and their
-workspace dependencies in `/home/pratik/Desktop/ROS_Projects/differential-drive-ros2`.
+workspace dependencies from the repository root.
 The build passed. The fresh regression run reported **63 checks, zero errors,
 failures or skips**: 35 dynamic Python tests, seven C++ layer tests, 19 existing
 navigation tests and two CTest wrapper results.
@@ -147,7 +147,7 @@ testing, not a guarantee of every random encounter or a safety certification.
 
 ## Initial verification (historical)
 
-Workspace: `/home/pratik/Desktop/ROS_Projects/differential-drive-ros2`.
+Workspace: repository root.
 ROS 2 Jazzy and the locally installed Gazebo Harmonic stack were used.
 
 ## Reproduced failure and fixes

@@ -5,7 +5,7 @@ This package adds a seeded Gazebo arena with static and moving rectangular obsta
 ## Build and run
 
 ```bash
-cd /home/pratik/Desktop/ROS_Projects/differential-drive-ros2
+cd ~/Desktop/ROS_Projects/differential-drive-ros2
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install --packages-up-to differential_drive_robot_dynamic_navigation
 source install/setup.bash
@@ -74,7 +74,7 @@ normally need **2D Pose Estimate** unless you manually relocate the robot.
 In a second terminal, check the running stack without moving anything:
 
 ```bash
-cd /home/pratik/Desktop/ROS_Projects/differential-drive-ros2
+cd ~/Desktop/ROS_Projects/differential-drive-ros2
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 ros2 run differential_drive_robot_dynamic_navigation check_navigation.py

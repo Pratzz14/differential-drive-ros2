@@ -272,7 +272,6 @@ exports.
 
 ## License
 
-The repository currently remains proprietary; see [LICENSE](LICENSE). Choose
-and apply an open-source hardware/software license before inviting reuse or
-redistribution. Update the `<license>` and maintainer entries in all four
-`package.xml` files if the licensing or ownership information changes.
+The repository is available under the [MIT License](LICENSE). The license
+applies to the software, CAD source, meshes, images, and documentation included
+in this repository.

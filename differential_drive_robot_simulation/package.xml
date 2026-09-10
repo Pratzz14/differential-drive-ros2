@@ -3,8 +3,8 @@
   <name>differential_drive_robot_simulation</name>
   <version>1.0.0</version>
   <description>Gazebo Harmonic simulation and RViz launch configuration for the differential-drive robot.</description>
-  <maintainer email="maintainer@example.com">Robot model maintainer</maintainer>
-  <license>Proprietary</license>
+  <maintainer email="pratik.mahankal14@gmail.com">Pratik Mahankal</maintainer>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

@@ -3,8 +3,8 @@
   <name>differential_drive_robot_navigation</name>
   <version>1.0.0</version>
   <description>Seeded autonomous-navigation benchmark for the differential-drive robot.</description>
-  <maintainer email="maintainer@example.com">Robot model maintainer</maintainer>
-  <license>Proprietary</license>
+  <maintainer email="pratik.mahankal14@gmail.com">Pratik Mahankal</maintainer>
+  <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>
 

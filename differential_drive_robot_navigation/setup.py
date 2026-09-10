@@ -18,10 +18,10 @@ setup(
     install_requires=['setuptools'],
     tests_require=['pytest'],
     zip_safe=True,
-    maintainer='Robot model maintainer',
-    maintainer_email='maintainer@example.com',
+    maintainer='Pratik Mahankal',
+    maintainer_email='pratik.mahankal14@gmail.com',
     description='Seeded autonomous-navigation benchmark for the differential-drive robot.',
-    license='Proprietary',
+    license='MIT',
     entry_points={
         'console_scripts': [
             'mission_runner = differential_drive_robot_navigation.mission_runner:main',
