@@ -54,6 +54,10 @@ for the complete topic and frame layout.
 │   ├── maps/ and worlds/
 │   ├── differential_drive_robot_dynamic_navigation/
 │   └── package.xml
+├── differential_drive_robot_exploration/
+│   ├── config/ and launch/
+│   ├── differential_drive_robot_exploration/
+│   └── package.xml
 └── docs/
     ├── architecture.md
     ├── verification.md
@@ -104,12 +108,13 @@ colcon build --symlink-install \
   differential_drive_robot_description \
   differential_drive_robot_simulation \
   differential_drive_robot_navigation \
-  differential_drive_robot_dynamic_navigation
+  differential_drive_robot_dynamic_navigation \
+  differential_drive_robot_exploration
 
 source install/setup.bash
 ```
 
-Only the four robot packages are selected.
+Only the five robot packages are selected.
 
 ## Run the simulation
 
@@ -241,6 +246,93 @@ for all launch arguments, RViz instructions and the read-only runtime health che
 ```bash
 ros2 run differential_drive_robot_dynamic_navigation check_navigation.py
 ```
+
+## Run autonomous exploration and mapping
+
+High-level run guides:
+
+- [Explore an environment and save its map](docs/exploration.md)
+- [Open a saved map and drive to destinations](docs/saved-map-navigation.md)
+
+Exploration starts with no saved map. SLAM Toolbox builds `/map`, the
+frontier explorer sends reachable frontier goals through Nav2, and the run
+saves an occupancy map plus simulator-truth benchmark metrics:
+
+```bash
+ros2 launch differential_drive_robot_exploration exploration.launch.py \
+  seed:=42 obstacle_count:=6
+```
+
+Results are written to a new timestamped folder below `~/ROS_Maps/exploration/`
+for each run, including repeated seeds. The final report prints the exact path.
+SLAM Toolbox already runs inside this launch; no separate SLAM launch is needed.
+The explorer prepares the next reachable target while driving (within 2 m of
+the current path's end) and hands it to Nav2 within 1 m of arrival. It favours
+larger frontiers in the direction of travel and analyzes new maps in a background
+worker. Exploration targets do not require a final heading adjustment. Sharp
+turns, obstacle avoidance, unavailable routes, and recovery can still require
+stops. Saved-map navigation retains its precise destination heading checks.
+Tune `prefetch_distance`, `handoff_distance`, and `goal_update_interval` if needed;
+the defaults are 2.0 m, 1.0 m, and 2.0 simulated seconds respectively.
+RViz shows the live occupancy grid, robot, laser scan, Nav2 plans, costmaps,
+and orange frontier markers. The robot does **not** stop when it merely crosses
+the coverage threshold. Successful completion requires both at least 98%
+reachable-free-space coverage and no reachable frontiers across three fresh
+map analyses, including a planner recheck of temporarily excluded candidates.
+It does not require final spins: the LiDAR already observes nearly 360 degrees.
+Below target, three bounded recovery/replanning passes are allowed; a spin is
+not repeated within 0.5 m of an earlier spin location. If no safe progress is
+available, the run saves as **incomplete**, never as successful completion.
+`max_recovery_spins` now bounds these recovery passes. The mission timeout is
+disabled by default; use `mission_timeout:=600.0` for a bounded diagnostic run.
+`stop_on_incomplete:=false` explicitly opts back into continued safe retries.
+
+At the end the robot stops, the final map and metrics remain visible in RViz,
+and the terminal prints a summary. Use **Ctrl+C** to close this stationary
+results session before starting another launch. To automatically close after
+saving (for batch runs), use `finish_behavior:=shutdown` instead of the default
+`finish_behavior:=hold`. Hold mode does not accept manual driving: it enforces
+zero velocity. RViz's **Exploration Results** and **Final Saved Map** displays
+subscribe to durable `/exploration/summary` and `/exploration/final_map` topics.
+
+The successful run saves `map.yaml`, `map.pgm`, the exact generated
+`navigation_arena.sdf`, `layout.json`, `result.json`, and a readable `summary.md`.
+The summary includes a ready-to-copy reload command with permanent paths.
+Coverage and accuracy are simulation-ground-truth scores, not a guarantee of
+perfect geometry; occupied IoU and recovery success/failure counts are included.
+Incomplete runs also save their partial map. The JSON format is version 2,
+retaining existing metric names; `recovery_spins` means attempts, not successes.
+
+To relaunch that same
+world, localize on the generated map, and navigate to any RViz-selected point:
+
+```bash
+ros2 launch differential_drive_robot_exploration saved_map_navigation.launch.py \
+  map:=/absolute/path/to/run/map.yaml \
+  world:=/absolute/path/to/run/navigation_arena.sdf
+```
+
+Wait for Nav2 to activate, then use RViz **2D Goal Pose**. The generated map's
+initial robot pose is `(0, 0, 0)` in the `map` frame; override `initial_x`,
+`initial_y`, or `initial_yaw` if the robot's saved-map start pose is changed.
+
+Run a reproducible batch with:
+
+```bash
+ros2 run differential_drive_robot_exploration run_exploration_benchmark \
+  --seeds 7 21 42 84 126 --headless
+```
+
+Each trial records coverage, simulation exploration time, Gazebo-truth
+distance travelled, balanced map accuracy, occupied-cell precision/recall,
+and the saved `map.pgm`/`map.yaml` artifacts. The batch command also writes
+`summary.csv` and `summary.json`. Batch trials use a 900-second safety timeout
+by default; pass `--mission-timeout 0` to apply the unbounded completeness
+policy there as well. Batch trials explicitly select `finish_behavior:=shutdown`.
+Older results under `/tmp/differential_drive_exploration/results/seed_42/` still
+load with the same launch; copy the entire run folder to durable storage before
+temporary files are cleaned. Saving an occupancy map supports navigation, not
+resuming a SLAM pose graph.
 
 ## Verification
 

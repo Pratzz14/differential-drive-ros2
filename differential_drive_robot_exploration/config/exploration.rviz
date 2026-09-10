@@ -161,6 +161,29 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /exploration/frontiers
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Exploration Results
+      Namespaces: {}
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /exploration/summary
+      Value: true
+    - Class: rviz_default_plugins/Map
+      Alpha: 1
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Final Saved Map
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /exploration/final_map
       Value: true
   Enabled: true
   Global Options:
@@ -187,10 +210,10 @@ Visualization Manager:
       Angle: 0
       Class: rviz_default_plugins/TopDownOrtho
       Name: Top Down
-      Scale: 70
+      Scale: 55
       Target Frame: map
-      X: 0
-      Y: 0
+      X: 4.5
+      Y: -1.0
       Value: TopDownOrtho (rviz)
 Window Geometry:
   Height: 900

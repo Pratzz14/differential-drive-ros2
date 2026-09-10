@@ -83,3 +83,42 @@ velocity smoother → /cmd_vel → Gazebo DiffDrive
 
 Its frame tree is `map → odom → base_link`, followed by the robot links from
 `robot_state_publisher`.
+
+## Autonomous exploration data flow
+
+Exploration replaces the saved-map/AMCL pair with SLAM Toolbox in mapping
+mode. The live `/map` feeds Nav2's static global costmap and the in-repo
+frontier coordinator:
+
+```text
+/scan + /odometry/filtered → SLAM Toolbox → /map + map → odom
+/map → frontier extraction → ComputePathToPose → NavigateToPose → /cmd_vel
+Gazebo /world/navigation_arena/pose/info → /ground_truth/poses
+rendered SDF + truth poses + final /map → benchmark metrics
+```
+
+Coverage is a completion gate rather than an early-stop trigger. The explorer
+continues while a reachable frontier exists. When frontiers appear exhausted,
+it waits for three distinct SLAM map analyses and revalidates every temporarily
+excluded frontier through the planner. Completion needs no mandatory sensor
+spin. Below-target recovery is bounded, with at most one spin per location;
+exhaustion saves as incomplete by default. Success requires at least 98%
+coverage and no reachable frontier. Finalization cancels actions, confirms a
+stationary robot and saves/scores one immutable map snapshot in a worker.
+The existing direct PGM/YAML writer avoids a blocking SLAM save-service call.
+Every run gets a durable unique folder, JSON metrics and Markdown report.
+Transient-local final-map and summary-marker publishers keep results visible
+in RViz while the robot holds zero velocity. The exploration smoother feeds
+`/cmd_vel_exploration`; the mission gates it onto `/cmd_vel`, dropping motion
+commands once finalization starts even if a cancellation response is delayed.
+Batch mode can shut down instead;
+shutdown requests are guarded against duplicate events. A saved-map run replaces
+SLAM Toolbox with `map_server` and AMCL so
+the same generated world can accept arbitrary RViz `2D Goal Pose` targets.
+
+The truth stream is bridged as a `geometry_msgs/msg/PoseArray`. In the seeded
+static arena, the robot model has a deterministic pose-array index equal to
+`6 + obstacle_count` (ground plane, four walls, divider, then generated
+obstacles). This avoids relying on the ROS bridge's name-dropping
+`Pose_V → TFMessage` conversion while retaining authoritative simulator pose
+data for distance and map scoring.

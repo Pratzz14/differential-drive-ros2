@@ -50,6 +50,7 @@ def _setup(context):
                               if namespace == '/' and name in {
                                   'amcl', 'ekf_filter_node', 'robot_state_publisher',
                                   'controller_server', 'planner_server', 'bt_navigator',
+                                  'exploration_mission', 'slam_toolbox',
                                   'collision_monitor', 'dynamic_obstacle_controller',
                                   'dynamic_obstacle_motion_tracker', 'motion_tracker',
                                   'lifecycle_manager_localization',
@@ -74,17 +75,19 @@ def _setup(context):
 
 
 def _stop_on_exit(event, context):
-    if context.is_shutdown:
+    if context.is_shutdown or getattr(context, '_robot_shutdown_requested', False):
         return []
     is_node = isinstance(event.action, Node)
     # launch_ros may retain <node_namespace_unspecified> in node_name.
     name = event.action.node_name.rsplit('/', 1)[-1] if is_node else ''
     expected_exit = name in {
         'spawn_differential_drive_robot', 'navigation_mission',
+        'exploration_mission', 'exploration_rviz',
         'dynamic_navigation_mission', 'navigation_rviz',
         'dynamic_navigation_rviz', 'rviz2',
     }
     if event.returncode != 0 or (is_node and not expected_exit):
+        context._robot_shutdown_requested = True
         return [Shutdown(reason=(
             f'{event.process_name} exited with code {event.returncode}; '
             'stopping the simulation to avoid a partially running stack.'
